@@ -3,6 +3,7 @@ import argparse
 import os
 
 import torch
+import tqdm
 from clip import clip
 from PIL import Image
 from torchvision.transforms import functional as TF
@@ -36,7 +37,7 @@ def sort_images(src, dest, decimal_places, operation):
           
           paths.append(os.path.join(root, name))
     
-    for path in paths:
+    for path in tqdm.tqdm(paths):
         image = Image.open(path)
         filename = os.path.split(path)[1]
         if not image.mode == "RGB":
@@ -68,7 +69,7 @@ def main():
                       help='Number of decimal places to use for sorting resolution. 2 will create folders like 7.34. 3 Will create 7.345. (default: 1)', default=1)
   parser.add_argument('--operation', type=str, help='Should the program copy or move the images. (default: copy)', choices=['copy','move'], default='copy')
   args = parser.parse_args()
-  sort_images(args.src_img_folder, args.dst_img_folder, args.decimal_places)
+  sort_images(args.src_img_folder, args.dst_img_folder, args.decimal_places, args.operation)
 
 
 if __name__ == '__main__':
