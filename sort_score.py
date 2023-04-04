@@ -38,26 +38,29 @@ def sort_images(src, dest, decimal_places, operation):
           paths.append(os.path.join(root, name))
     
     for path in tqdm.tqdm(paths):
-        image = Image.open(path)
-        filename = os.path.split(path)[1]
-        if not image.mode == "RGB":
-            image = image.convert("RGB")
-        
-        img = TF.resize(image, 224, transforms.InterpolationMode.LANCZOS)
-        img = TF.center_crop(img, (224,224))
-        img = TF.to_tensor(img).to(device)
-        img = normalize(img)
-        clip_image_embed = F.normalize(
-            clip_model.encode_image(img[None, ...]).float(),
-            dim=-1)
-        score = str(round(model(clip_image_embed).item(),decimal_places))
+        try:
+            image = Image.open(path)
+            filename = os.path.split(path)[1]
+            if not image.mode == "RGB":
+                image = image.convert("RGB")
+            
+            img = TF.resize(image, 224, transforms.InterpolationMode.LANCZOS)
+            img = TF.center_crop(img, (224,224))
+            img = TF.to_tensor(img).to(device)
+            img = normalize(img)
+            clip_image_embed = F.normalize(
+                clip_model.encode_image(img[None, ...]).float(),
+                dim=-1)
+            score = str(round(model(clip_image_embed).item(),decimal_places))
 
-        os.makedirs(os.path.join(dest,score),exist_ok=True)
-        dest_filename = os.path.join(dest,score,filename)
-        if operation == 'copy':
-           shutil.copy(path,dest_filename)
-        elif operation == 'move':
-           shutil.move(path,dest_filename)
+            os.makedirs(os.path.join(dest,score),exist_ok=True)
+            dest_filename = os.path.join(dest,score,filename)
+            if operation == 'copy':
+                shutil.copy(path,dest_filename)
+            elif operation == 'move':
+                shutil.move(path,dest_filename)
+        except Exception as e:
+            print(e)
            
 def main():
   parser = argparse.ArgumentParser(
