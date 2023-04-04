@@ -1,41 +1,24 @@
 ## Introduction
-
-This is model fit and inference code for CLIP aesthetic regressions trained on
-[Simulacra Aesthetic Captions](https://github.com/JD-P/simulacra-aesthetic-captions).
-These remarkably simple models emulate human aesthetic judgment. They can be used
-in tasks such as dataset filtering to remove obviously poor quality images from
-the corpus before training. The following grids, one sorted by [John David
-Pressman](https://github.com/JD-P) and one sorted by the machine give some idea
-of the models capabilities:
-
-### Manually Sorted Grid
-
-![A human sorted grid of 20 images from worst to best, starting with the worst image in the
-top left and the best in the bottom right](https://github.com/crowsonkb/simulacra-aesthetic-models/raw/master/sacManualSort.png)
-
-### Model Sorted Grid
-
-![A machine sorted grid of 20 images from worst to best, starting with the worst image in the
-top left and the best in the bottom right](https://github.com/crowsonkb/simulacra-aesthetic-models/raw/master/sacModelSort.png)
+Use `score_sort.py` to organize a folder of images according to aesthetic score.
 
 ## Installation
 
 Git clone this repository:
 
 ```
-git clone https://github.com/crowsonkb/simulacra-aesthetic-models.git
+git clone https://github.com/theovercomer8/simulacra-aesthetic-models.git
 ```
 
 Install pytorch if you don't already have it:
 
 ```
-pip3 install torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
+pip3 install torch torchvision
 ```
 
 Then pip install our other dependencies:
 
 ```
-pip3 install tqdm pillow torchvision sklearn numpy
+pip3 install tqdm pillow torchvision scikit-learn numpy
 ```
 
 If you don't already have it installed, you'll need to install CLIP:
@@ -49,11 +32,21 @@ cd ..
 
 ## Usage
 
-The models are largely meant to be used as a library, i.e. you'll need to write
-specific code for your use case. But to get you started we've provided a sample
-script `rank_images.py` which finds all the `.jpg` or `.png` images in a directory
-tree and ranks the top N (default 50) with the aesthetic model:
+`python score_sort.py --help`
 
 ```
-python3 rank_images.py demo_images/
+usage: sort_score.py [-h] [--decimal_places DECIMAL_PLACES] [--operation {copy,move}] src_img_folder dst_img_folder
+
+Sort images in src_img_folder into score folders in dst_img_folder
+
+positional arguments:
+  src_img_folder        Source folder containing the images
+  dst_img_folder        Destination folder to sort into
+
+options:
+  -h, --help            show this help message and exit
+  --decimal_places DECIMAL_PLACES
+                        Number of decimal places to use for sorting resolution. 2 will create folders like 7.34. 3 Will create 7.345. (default: 1)
+  --operation {copy,move}
+                        Should the program copy or move the images. (default: copy)
 ```
